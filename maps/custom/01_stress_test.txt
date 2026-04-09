@@ -1,0 +1,213 @@
+# CUSTOM: Stress test - 30 drones through a wide grid
+# 5 parallel lanes forced by capacity=1 bottlenecks, 3 walls,
+# restricted zones, dead ends, and a tight final funnel.
+
+nb_drones: 30
+
+# === COL 0: Start ===
+start_hub: S 0 0 [max_drones=30]
+
+# === COL 1: 5 entry gates (capacity 1 each) ===
+hub: g1 1 4 [max_drones=1]
+hub: g2 1 2 [max_drones=1]
+hub: g3 1 0 [max_drones=1]
+hub: g4 1 -2 [max_drones=1]
+hub: g5 1 -4 [max_drones=1]
+
+# === COL 2: Wall 1 - blocked with gaps ===
+hub: w1_block1 2 5 [zone=blocked]
+hub: w1_gap1 2 4 [max_drones=1]
+hub: w1_block2 2 3 [zone=blocked]
+hub: w1_gap2 2 2 [max_drones=1]
+hub: w1_block3 2 1 [zone=blocked]
+hub: w1_gap3 2 0 [max_drones=1]
+hub: w1_block4 2 -1 [zone=blocked]
+hub: w1_gap4 2 -2 [max_drones=1]
+hub: w1_block5 2 -3 [zone=blocked]
+hub: w1_gap5 2 -4 [max_drones=1]
+hub: w1_block6 2 -5 [zone=blocked]
+
+# === COL 3-4: 5 parallel lanes (mix of types) ===
+# Lane 1 (top): normal
+hub: lane1_a 3 4 [max_drones=1]
+hub: lane1_b 4 4 [max_drones=1]
+
+# Lane 2: normal
+hub: lane2_a 3 2 [max_drones=1]
+hub: lane2_b 4 2 [max_drones=1]
+
+# Lane 3 (center): normal with dead end branch
+hub: lane3_a 3 0 [max_drones=1]
+hub: lane3_b 4 0 [max_drones=1]
+hub: trap1 3 1 [max_drones=1]
+hub: trap1_dead 4 1 [max_drones=1]
+
+# Lane 4: normal
+hub: lane4_a 3 -2 [max_drones=1]
+hub: lane4_b 4 -2 [max_drones=1]
+
+# Lane 5 (bottom): normal
+hub: lane5_a 3 -4 [max_drones=1]
+hub: lane5_b 4 -4 [max_drones=1]
+hub: trap2 3 -3 [max_drones=1]
+hub: trap2_dead 4 -3 [max_drones=1]
+
+# === COL 5: Wall 2 - second bottleneck ===
+hub: w2_block1 5 5 [zone=blocked]
+hub: w2_gap1 5 4 [max_drones=1]
+hub: w2_block2 5 3 [zone=blocked]
+hub: w2_gap2 5 2 [max_drones=1]
+hub: w2_block3 5 1 [zone=blocked]
+hub: w2_gap3 5 0 [max_drones=1]
+hub: w2_block4 5 -1 [zone=blocked]
+hub: w2_gap4 5 -2 [max_drones=1]
+hub: w2_block5 5 -3 [zone=blocked]
+hub: w2_gap5 5 -4 [max_drones=1]
+hub: w2_block6 5 -5 [zone=blocked]
+
+# === COL 6-7: Scramble zone - cross connections ===
+hub: scr_n1 6 4 [max_drones=1]
+hub: scr_n2 6 2 [max_drones=1]
+hub: scr_mid 6 0 [max_drones=1]
+hub: scr_s1 6 -2 [max_drones=1]
+hub: scr_s2 6 -4 [max_drones=1]
+
+hub: node_n1 7 3 [zone=restricted max_drones=1]
+hub: node_mid_top 7 1 [max_drones=1]
+hub: node_mid_bot 7 -1 [max_drones=1]
+hub: node_s1 7 -3 [zone=restricted max_drones=1]
+
+# === COL 8: Wall 3 - final wall ===
+hub: w3_block1 8 4 [zone=blocked]
+hub: w3_block2 8 3 [zone=blocked]
+hub: w3_gap1 8 2 [max_drones=1]
+hub: w3_block3 8 1 [zone=blocked]
+hub: w3_gap2 8 0 [max_drones=1]
+hub: w3_block4 8 -1 [zone=blocked]
+hub: w3_gap3 8 -2 [max_drones=1]
+hub: w3_block5 8 -3 [zone=blocked]
+hub: w3_block6 8 -4 [zone=blocked]
+
+# === COL 9: Bypass tunnels (restricted, around wall 3) ===
+hub: bypass_top 8 5 [zone=restricted max_drones=1]
+hub: bypass_bot 8 -5 [zone=restricted max_drones=1]
+
+# === COL 9-10: Convergence funnel ===
+hub: funnel_n 9 2 [max_drones=2]
+hub: funnel_mid 9 0 [max_drones=2]
+hub: funnel_s 9 -2 [max_drones=2]
+hub: funnel_top 9 4 [max_drones=1]
+hub: funnel_bot 9 -4 [max_drones=1]
+
+hub: neck_top 10 1 [max_drones=1]
+hub: neck_bot 10 -1 [max_drones=1]
+
+# === COL 11-12: Final stretch ===
+hub: final_a 11 0 [max_drones=2]
+hub: final_b 12 0 [max_drones=1]
+
+# === FINISH ===
+end_hub: E 13 0 [max_drones=30]
+
+# ══════════════════════════════════════════
+# CONNECTIONS
+# ══════════════════════════════════════════
+
+# Start to 5 gates
+connection: S-g1
+connection: S-g2
+connection: S-g3
+connection: S-g4
+connection: S-g5
+
+# Gates to wall 1 gaps (each gate -> its gap only)
+connection: g1-w1_gap1
+connection: g2-w1_gap2
+connection: g3-w1_gap3
+connection: g4-w1_gap4
+connection: g5-w1_gap5
+
+# Wall 1 gaps to lanes
+connection: w1_gap1-lane1_a
+connection: w1_gap2-lane2_a
+connection: w1_gap3-lane3_a
+connection: w1_gap4-lane4_a
+connection: w1_gap5-lane5_a
+
+# Lane progression
+connection: lane1_a-lane1_b
+connection: lane2_a-lane2_b
+connection: lane3_a-lane3_b
+connection: lane4_a-lane4_b
+connection: lane5_a-lane5_b
+
+# Dead end traps
+connection: lane3_a-trap1
+connection: trap1-trap1_dead
+connection: lane5_a-trap2
+connection: trap2-trap2_dead
+
+# Lanes to wall 2 gaps
+connection: lane1_b-w2_gap1
+connection: lane2_b-w2_gap2
+connection: lane3_b-w2_gap3
+connection: lane4_b-w2_gap4
+connection: lane5_b-w2_gap5
+
+# Wall 2 gaps to scramble
+connection: w2_gap1-scr_n1
+connection: w2_gap2-scr_n2
+connection: w2_gap3-scr_mid
+connection: w2_gap4-scr_s1
+connection: w2_gap5-scr_s2
+
+# Scramble cross-connections (force mixing)
+connection: scr_n1-node_n1
+connection: scr_n2-node_n1
+connection: scr_n2-node_mid_top
+connection: scr_mid-node_mid_top
+connection: scr_mid-node_mid_bot
+connection: scr_s1-node_mid_bot
+connection: scr_s1-node_s1
+connection: scr_s2-node_s1
+
+# Scramble to wall 3 gaps + bypasses
+connection: node_n1-w3_gap1
+connection: node_mid_top-w3_gap1
+connection: node_mid_top-w3_gap2
+connection: node_mid_bot-w3_gap2
+connection: node_mid_bot-w3_gap3
+connection: node_s1-w3_gap3
+
+# Bypass tunnels around wall 3
+connection: scr_n1-bypass_top
+connection: scr_s2-bypass_bot
+connection: bypass_top-funnel_top
+connection: bypass_bot-funnel_bot
+
+# Wall 3 gaps to funnel
+connection: w3_gap1-funnel_n
+connection: w3_gap2-funnel_mid
+connection: w3_gap3-funnel_s
+
+# Funnel internal connections
+connection: funnel_top-funnel_n
+connection: funnel_n-funnel_mid
+connection: funnel_mid-funnel_s
+connection: funnel_s-funnel_bot
+
+# Funnel to neck
+connection: funnel_n-neck_top
+connection: funnel_mid-neck_top
+connection: funnel_mid-neck_bot
+connection: funnel_s-neck_bot
+connection: funnel_top-neck_top
+connection: funnel_bot-neck_bot
+
+# Neck to final
+connection: neck_top-final_a
+connection: neck_bot-final_a
+
+# Final stretch
+connection: final_a-final_b
+connection: final_b-E
